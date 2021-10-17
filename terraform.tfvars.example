@@ -13,3 +13,4 @@
 org_id          = "123456789"
 billing_account = "0123456-12A12B-56AB7C"
 project_name    = "sample-project"
+folder_id       = "101010101010"
