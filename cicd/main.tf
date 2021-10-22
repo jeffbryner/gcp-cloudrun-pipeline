@@ -113,12 +113,10 @@ resource "google_project_service" "services" {
 
 # IAM permissions to allow contributors to view the cloud build jobs.
 resource "google_project_iam_member" "cloudbuild_builds_viewers" {
-  for_each = toset([
-    "group:cicd-viewers@jeffbryner.com",
-  ])
-  project = google_project.cicd.project_id
-  role    = "roles/cloudbuild.builds.viewer"
-  member  = each.value
+  for_each = toset(var.cloudbuild_viewers)
+  project  = google_project.cicd.project_id
+  role     = "roles/cloudbuild.builds.viewer"
+  member   = each.value
   depends_on = [
     google_project_service.services,
   ]
@@ -126,12 +124,10 @@ resource "google_project_iam_member" "cloudbuild_builds_viewers" {
 
 # IAM permissions to allow approvers to edit/create the cloud build jobs.
 resource "google_project_iam_member" "cloudbuild_builds_editors" {
-  for_each = toset([
-    "group:cicd-editors@jeffbryner.com",
-  ])
-  project = google_project.cicd.project_id
-  role    = "roles/cloudbuild.builds.editor"
-  member  = each.value
+  for_each = toset(var.cloudbuild_editors)
+  project  = google_project.cicd.project_id
+  role     = "roles/cloudbuild.builds.editor"
+  member   = each.value
   depends_on = [
     google_project_service.services,
   ]
@@ -140,13 +136,10 @@ resource "google_project_iam_member" "cloudbuild_builds_editors" {
 # IAM permissions to allow approvers and contributors to view logs.
 # https://cloud.google.com/cloud-build/docs/securing-builds/store-view-build-logs
 resource "google_project_iam_member" "cloudbuild_logs_viewers" {
-  for_each = toset([
-    "group:cicd-viewers@jeffbryner.com",
-    "group:cicd-editors@jeffbryner.com",
-  ])
-  project = google_project.cicd.project_id
-  role    = "roles/viewer"
-  member  = each.value
+  for_each = toset(concat(var.cloudbuild_viewers, var.cloudbuild_editors))
+  project  = google_project.cicd.project_id
+  role     = "roles/viewer"
+  member   = each.value
   depends_on = [
     google_project_service.services,
   ]
@@ -162,9 +155,7 @@ resource "google_sourcerepo_repository" "configs" {
 }
 
 resource "google_sourcerepo_repository_iam_member" "readers" {
-  for_each = toset([
-    "group:cicd-viewers@jeffbryner.com",
-  ])
+  for_each   = toset(var.cloudbuild_viewers)
   project    = google_project.cicd.project_id
   repository = google_sourcerepo_repository.configs.name
   role       = "roles/source.reader"
@@ -172,9 +163,7 @@ resource "google_sourcerepo_repository_iam_member" "readers" {
 }
 
 resource "google_sourcerepo_repository_iam_member" "writers" {
-  for_each = toset([
-    "group:cicd-editors@jeffbryner.com",
-  ])
+  for_each   = toset(var.cloudbuild_editors)
   project    = google_project.cicd.project_id
   repository = google_sourcerepo_repository.configs.name
   role       = "roles/source.writer"
