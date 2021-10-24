@@ -67,11 +67,11 @@ variable "auto_create_network" {
 variable "cloudbuild_viewers" {
   description = "groups to add as a viewer/reader in group:groupname@domain.com format"
   type        = list(any)
-  default     = [""]
+  default     = []
 }
 
 variable "cloudbuild_editors" {
   description = "groups to add as a editor/writer in group:groupname@domain.com format"
   type        = list(any)
-  default     = [""]
+  default     = []
 }
