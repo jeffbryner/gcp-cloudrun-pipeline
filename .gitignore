@@ -3,4 +3,4 @@ cicd/.terraform.lock.hcl
 cicd/terraform.tfstate
 cicd/terraform.tfstate.backup
 cicd/.terraform/*
-cicd/terraform.tfvars
+
