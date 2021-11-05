@@ -74,7 +74,7 @@ locals {
   cloudbuild_roles = [
     # Allow CICD to view all resources within the project so it can run terraform plans against them.
     # It won't be able to actually apply any changes unless granted the permission in this list.
-    "roles/viewer",
+    "roles/editor",
 
     # Enable Cloud Build SA to list and enable APIs in the project.
     "roles/serviceusage.serviceUsageAdmin",
@@ -230,16 +230,5 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
   member = local.cloudbuild_sa
   depends_on = [
     google_project_service.services, google_storage_bucket.project_terraform_state
-  ]
-}
-
-# Grant Cloud Build Service Account access to the organization.
-resource "google_organization_iam_member" "cloudbuild_sa_organization_iam" {
-  for_each = toset(local.cloudbuild_sa_editor_roles)
-  org_id   = var.org_id
-  role     = each.value
-  member   = local.cloudbuild_sa
-  depends_on = [
-    google_project_service.services,
   ]
 }
