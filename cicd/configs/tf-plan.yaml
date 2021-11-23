@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Container used here can be found at:
-# source: https://github.com/GoogleCloudPlatform/cloud-foundation-toolkit/tree/master/infra/build/developer-tools-light
-# images: https://console.cloud.google.com/gcr/images/cloud-foundation-cicd/GLOBAL/cft/developer-tools-light
-
 timeout: 1200s
 
 substitutions:
@@ -23,19 +19,19 @@ substitutions:
     _MANAGED_DIRS: ""
 
 steps:
-  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools-light:1"
+  - name: "gcr.io/${PROJECT_ID}/cloudbuilder:latest"
     entrypoint: terraform
     args: ["version"]
     id: Terraform version
 
-  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools-light:1"
+  - name: "gcr.io/${PROJECT_ID}/cloudbuilder:latest"
     entrypoint: bash
     args: ["./cicd/configs/run.sh", "-d", "${_MANAGED_DIRS}", "-a", "init -lock=false", "-a", "plan -lock=false -out=plan.tfplan"]
     dir: "${_TERRAFORM_ROOT}"
     id: Speculative plan
 
   # Check for delete operations as an FYI, it won't fail the build.
-  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools-light:1"
+  - name: "gcr.io/${PROJECT_ID}/cloudbuilder:latest"
     entrypoint: bash
     args: ["./cicd/configs/tf-deletion-check.sh", "./cicd/configs/tf-deletion-allowlist.txt"]
     dir: "${_TERRAFORM_ROOT}"

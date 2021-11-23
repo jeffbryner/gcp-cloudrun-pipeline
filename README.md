@@ -81,43 +81,23 @@ You will need to be able to create a project with billing in the appropriate pla
 https://console.cloud.google.com/cloud-build/dashboard?project=<project id here>
 
 
-## Group Management
-1. If you would like to enable your pipeline to manage groups and
-    memberships for you:
+## CICD Container/Container Creation
 
-    1. Make sure directories which contain the groups resources are
-        included in the `_managed_dirs` list in the `triggers.tf` file in the cicd directory.
-    1. Grant **Google Workspace Group Editor** role to the CICD service account
-        `<project-number>@cloudbuild.gserviceaccount.com` by following
-        the following steps:
+The Docker container used for CICD executions are inspired by those built and maintained by the
+Cloud Foundation Toolkit (CFT) team.
 
-        1. Go to Google Admin console's Admin roles configuration page
-            <https://admin.google.com/u/1/ac/roles>
-        1. Click `Groups Editor`;
-        1. Click `Admins assigned`;
-        1. Click `Assign service accounts` and input the CICD service account
-            email address.
 
-    Alternatively, follow steps
-    [here](https://cloud.google.com/identity/docs/how-to/setup#assigning_an_admin_role_to_the_service_account).
+Documentations and source can be found [here](https://github.com/GoogleCloudPlatform/cloud-foundation-toolkit/tree/master/infra/build/developer-tools-light). Images can be found [here](https://console.cloud.google.com/gcr/images/cloud-foundation-cicd/GLOBAL/cft/developer-tools-light).
 
-    In either approach, you must be a **Google Workspace Super Admin** to be
-    able to complete those steps.
+This version of the container includes necessary dependencies (e.g. bash, terraform, gcloud, python, pip, pipenv) to validate and deploy Terraform configs and is based on hashicorp's native terraform and alpine linux.
 
-## CICD Container
+To build the container, cd to the container directory and issue the command
 
-The Docker container used for CICD executions are built and maintained by the
-Cloud Foundation Toolkit (CFT) team. Documentations and scripts can be found
-[here](https://github.com/GoogleCloudPlatform/cloud-foundation-toolkit/tree/master/infra/build/developer-tools-light).
-This container includes necessary dependencies (e.g. bash, terraform, gcloud) to
-validate and deploy Terraform configs. If you would like to use a different
-container for production deployment, you can modify the Cloud Build YAML files
-in [./configs](./configs) directory to point to your container.
+```bash
+gcloud builds submit
+```
+Which will kick off a build using the cloudbuild.yaml and Dockerfile in the container directory, creating a 'cloudbuilder' container ( gcr.io/${PROJECT_ID}/cloudbuilder )in your project that is used by the triggers.
 
-This leverages Google Container Registry's Vulnerability scanning feature to detect
-potential security risks in this container, and
-[None](https://console.cloud.google.com/gcr/images/cloud-foundation-cicd/global/cft/developer-tools-light@sha256:d881ce4ff2a73fa0877dd357af798a431a601b2ccfe5a140837bcb883cd3f011/details?tab=vulnz)
-is reported.
 
 ## Features
 
