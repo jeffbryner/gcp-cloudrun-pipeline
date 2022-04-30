@@ -1,32 +1,13 @@
 
-# GCP-Project-Pipeline
+# GCP-CloudRun-Pipeline
 
-A goldilocks effort for bootstraping a GCP project with it's own ci/cd pipeline:
+A goldilocks effort for bootstraping a GCP CloudRun project with it's own ci/cd pipeline focused on the quickest way to hoist a cloudrun container into GCP via terraform.
 
-Inspired by these great repos:
-
-  - https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite
-  - https://github.com/terraform-google-modules/terraform-example-foundation
+Based project : https://github.com/jeffbryner/gcp-project-pipeline
 
 ## Why?
-The healthcare data protection suite is great at making a simple project that gets you a functional ci/cd pipeline for terraforming GCP all using GCP resources. However, it's templated terraform eminating from a golang engine. This project cuts to the chase using just terraform.
 
-The terraform example foundation is about building a complete GCP org, not an individual project and can be overkill. It also doesn't setup source control/triggers for the cicd pipeline itself, which is odd.
-
-This is meant to simply satisfy the urge to dream up a project, give it a name and location in the org tree, terraform apply and then immediately begin using the ci/cd pipeline to build the remaining infrastructure.
-
-
-## Continuous integration (CI) and continuous deployment (CD)
-
-The CI and CD pipelines use
-[Google Cloud Build](https://cloud.google.com/cloud-build) and
-[Cloud Build triggers](https://cloud.google.com/cloud-build/docs/automating-builds/create-manage-triggers)
-to detect changes in a cloud source repo, trigger builds, and implement terraform changes.
-
-## Concept of operations
-The desired end state is a GCP project with a cloud source repo and cloud build triggers that terraform plan/apply on code commits. The build triggers will run terraform against a list of directories you choose (cicd by default) so you can use it to build the pipeline, infrastructure, groups, compute, databases, iam, etc as separate concerns as you see fit.
-
-The `_managed_dirs` list in the `triggers.tf` file in the cicd directory sets the directories that will be managed by this cicd pipeline.
+This is meant to simply satisfy the urge to dream up a CloudRun project, give it a name and location in the org tree, terraform apply and then immediately begin using the ci/cd pipeline to build the remaining infrastructure.
 
 ## Setup
 You will need to be able to create a project with billing in the appropriate place in your particular org structure. First you'll run terraform locallly to initialize the project and the pipeline. After the project is created, we will transfer terraform state to the cloud bucket and from then on you can use git commits to trigger terraform changes without any local resources or permissions.
