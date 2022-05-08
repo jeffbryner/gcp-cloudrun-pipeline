@@ -36,7 +36,9 @@ locals {
   project_name      = format("%s-%s", var.project_prefix, var.project_name)
   project_id        = format("%s-%s-%s", var.project_prefix, var.project_name, random_id.suffix.hex)
   state_bucket_name = format("bkt-%s-%s", "tfstate", local.project_id)
+  art_bucket_name   = format("bkt-%s-%s", "artifacts", local.project_id)
   repo_name         = format("cicd-%s", local.project_name)
+  gar_repo_name     = format("%s-%s", var.project_prefix, "containers")
   is_organization   = var.parent_folder == "" ? true : false
   parent_id         = var.parent_folder == "" ? var.org_id : split("/", var.parent_folder)[1]
   project_org_id    = var.folder_id != "" ? null : var.org_id
@@ -233,4 +235,44 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
   depends_on = [
     google_project_service.services, google_storage_bucket.project_terraform_state
   ]
+}
+
+
+# cloudbuild artifiact bucket/permissions/artifact repository
+
+resource "google_storage_bucket" "cloudbuild_artifacts" {
+  project                     = google_project.cicd.project_id
+  name                        = local.art_bucket_name
+  location                    = var.default_region
+  uniform_bucket_level_access = true
+  force_destroy               = true
+  versioning {
+    enabled = true
+  }
+}
+
+resource "google_storage_bucket_iam_member" "cloudbuild_artifacts_iam" {
+  bucket = google_storage_bucket.cloudbuild_artifacts.name
+  role   = "roles/storage.admin"
+  member = local.cloudbuild_sa
+}
+
+
+resource "google_artifact_registry_repository" "image-repo" {
+  provider = google-beta
+  project  = google_project.cicd.project_id
+
+  location      = var.default_region
+  repository_id = local.gar_repo_name
+  description   = "Docker repository for images used by Cloud Build"
+  format        = "DOCKER"
+}
+resource "google_artifact_registry_repository_iam_member" "terraform-image-iam" {
+  provider = google-beta
+  project  = google_project.cicd.project_id
+
+  location   = google_artifact_registry_repository.image-repo.location
+  repository = google_artifact_registry_repository.image-repo.name
+  role       = "roles/artifactregistry.writer"
+  member     = local.cloudbuild_sa
 }

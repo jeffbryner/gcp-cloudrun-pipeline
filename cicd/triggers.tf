@@ -151,3 +151,23 @@ resource "google_cloudbuild_trigger" "apply_prod" {
 }
 
 
+/**
+cloud build 'cloudbuilder' container
+**/
+
+resource "null_resource" "cloudbuild_terraform_builder" {
+  triggers = {
+    project_id_cloudbuild_project = google_project.cicd.project_id
+    gar_name                      = local.repo_name
+  }
+
+  provisioner "local-exec" {
+    command = <<EOT
+      gcloud builds submit ./container/ --project ${google_project.cicd.project_id} --config=./container/cloudbuild.yaml }
+  EOT
+  }
+  depends_on = [
+    google_artifact_registry_repository_iam_member.terraform-image-iam
+  ]
+}
+
