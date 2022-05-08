@@ -59,7 +59,8 @@ locals {
     "appengine.googleapis.com",
     "cloudscheduler.googleapis.com",
     "run.googleapis.com",
-    "containerregistry.googleapis.com"
+    "containerregistry.googleapis.com",
+    "artifactregistry.googleapis.com"
   ]
   cloudbuild_sa_viewer_roles = [
     "roles/browser",
