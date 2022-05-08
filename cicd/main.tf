@@ -276,4 +276,7 @@ resource "google_artifact_registry_repository_iam_member" "terraform-image-iam" 
   repository = google_artifact_registry_repository.image-repo.name
   role       = "roles/artifactregistry.writer"
   member     = local.cloudbuild_sa
+  depends_on = [
+    google_artifact_registry_repository.image-repo
+  ]
 }
