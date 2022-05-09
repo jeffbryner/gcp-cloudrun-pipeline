@@ -31,7 +31,7 @@ resource "google_cloudbuild_trigger" "validate_prod" {
 
   substitutions = {
     _TERRAFORM_ROOT = "."
-    _MANAGED_DIRS   = "cicd groups"
+    _MANAGED_DIRS   = "cicd"
   }
 
   depends_on = [
@@ -59,7 +59,7 @@ resource "google_cloudbuild_trigger" "plan_prod" {
 
   substitutions = {
     _TERRAFORM_ROOT = "."
-    _MANAGED_DIRS   = "cicd groups"
+    _MANAGED_DIRS   = "cicd"
   }
 
   depends_on = [
@@ -90,7 +90,7 @@ resource "google_cloudbuild_trigger" "plan_scheduled_prod" {
 
   substitutions = {
     _TERRAFORM_ROOT = "."
-    _MANAGED_DIRS   = "cicd groups"
+    _MANAGED_DIRS   = "cicd"
   }
 
   depends_on = [
@@ -141,7 +141,7 @@ resource "google_cloudbuild_trigger" "apply_prod" {
 
   substitutions = {
     _TERRAFORM_ROOT = "."
-    _MANAGED_DIRS   = "cicd groups"
+    _MANAGED_DIRS   = "cicd"
   }
 
   depends_on = [
@@ -163,7 +163,7 @@ resource "null_resource" "cloudbuild_terraform_builder" {
 
   provisioner "local-exec" {
     command = <<EOT
-      gcloud builds submit ./container/ --project ${google_project.cicd.project_id} --config=./container/cloudbuild.yaml }
+      gcloud builds submit ./container/ --project ${google_project.cicd.project_id} --config=./container/cloudbuild.yaml
   EOT
   }
   depends_on = [
