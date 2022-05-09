@@ -268,6 +268,7 @@ resource "google_artifact_registry_repository" "image-repo" {
   description   = "Docker repository for images used by Cloud Build"
   format        = "DOCKER"
 }
+
 resource "google_artifact_registry_repository_iam_member" "terraform-image-iam" {
   provider = google-beta
   project  = google_project.cicd.project_id
