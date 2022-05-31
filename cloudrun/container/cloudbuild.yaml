@@ -1,8 +1,11 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '--build-arg','TERRAFORM_VERSION=${_TERRAFORM_VERSION}', '--build-arg','CLOUD_SDK_VERSION=${_CLOUD_SDK_VERSION}','-t', 'gcr.io/${PROJECT_ID}/cloudrun', '.' ]
+  args: [ 'build', '--build-arg','TERRAFORM_VERSION=${_TERRAFORM_VERSION}', '--build-arg','CLOUD_SDK_VERSION=${_CLOUD_SDK_VERSION}','-t', '${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}', '.' ]
 substitutions:
   _TERRAFORM_VERSION: 1.0.11
   _CLOUD_SDK_VERSION: 354.0.0
+  _LOCATION: us-central1
+  _IMAGE: cloudrun
+  _REPOSITORY: prj-containers
 images:
-- gcr.io/$PROJECT_ID/cloudrun
+- '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}'
