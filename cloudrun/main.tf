@@ -43,7 +43,7 @@ locals {
 cloud build container
 **/
 
-resource "null_resource" "cloudbuild_terraform_builder" {
+resource "null_resource" "cloudbuild_cloudrun_container" {
   triggers = {
     project_id_cloudbuild_project = local.project_id
     gar_name                      = local.gar_repo_name
