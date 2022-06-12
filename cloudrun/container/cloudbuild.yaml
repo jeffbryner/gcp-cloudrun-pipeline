@@ -2,7 +2,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '--build-arg','PORT=${_PORT}','-t', '${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}', '.' ]
 substitutions:
-  _PORT: 8080
+  _PORT: '8080'
   _LOCATION: us-central1
   _IMAGE: cloudrun
   _REPOSITORY: prj-containers
