@@ -59,6 +59,7 @@ resource "null_resource" "cloudbuild_cloudrun_container" {
 resource "google_cloud_run_service" "default" {
   name     = "cloudrun-srv"
   location = "us-central1"
+  project  = local.project_id
 
   template {
     spec {
