@@ -82,7 +82,9 @@ locals {
     "roles/editor",
 
     # Enable Cloud Build SA to list and enable APIs in the project.
+    # and set cloud run IAM policy
     "roles/serviceusage.serviceUsageAdmin",
+    "roles/run.admin"
   ]
 }
 
