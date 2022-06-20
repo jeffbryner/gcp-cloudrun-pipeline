@@ -76,7 +76,11 @@ resource "google_cloud_run_service" "default" {
   template {
     spec {
       containers {
-        image = "us-central1-docker.pkg.dev/prj-cloudrun-sample-6271/prj-containers/cloudrun"
+        image = "us-central1-docker.pkg.dev/prj-cloudrun-sample-6271/prj-containers/cloudrun",
+        env {
+          name = "TARGET"
+          value = "Worldly"
+        }
       }
     }
   }
