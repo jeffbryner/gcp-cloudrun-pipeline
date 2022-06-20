@@ -1,0 +1,11 @@
+# grab output of the bucket created in terraform apply in the /cicd directory
+# and enter here
+# then rename to backend.tf
+# and run terraform init --force-copy
+
+terraform {
+  backend "gcs" {
+    bucket = "UPDATE_ME_WITH_OUTPUT_OF_INITIAL_INIT"
+    prefix = "cloudrun"
+  }
+}
