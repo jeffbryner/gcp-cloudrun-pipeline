@@ -56,6 +56,18 @@ resource "null_resource" "cloudbuild_cloudrun_container" {
 }
 
 
+# set a project policy to allow allUsers invoke
+resource "google_project_organization_policy" "services_policy" {
+  project    = local.project_id
+  constraint = "iam.allowedPolicyMemberDomains"
+
+  list_policy {
+    allow {
+      all = true
+    }
+  }
+}
+
 resource "google_cloud_run_service" "default" {
   name     = "cloudrun-srv"
   location = "us-central1"
